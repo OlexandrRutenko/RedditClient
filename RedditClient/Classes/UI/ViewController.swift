@@ -9,17 +9,11 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    private let postService = PostService()
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        postService.getPosts()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
+    
 }
 
