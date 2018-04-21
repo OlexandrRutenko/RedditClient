@@ -10,20 +10,21 @@ import Foundation
 
 class PostService {
     let baseUrl = URL(string: "https://www.reddit.com")!
-    private let networkManager: NetworkManager
-    init(networkManager: NetworkManager) {
-        self.networkManager = networkManager
+    private let network: Network
+    init(network: Network) {
+        self.network = network
     }
     convenience init() {
-        self.init(networkManager: NetworkManager())
+        self.init(network: NetworkManager())
     }
-    func getPosts() {
+    func getPosts(success: @escaping (Page) -> Void, error errorCallback: @escaping (String) -> Void) {
         let resource = Resource(endpoint: baseUrl, path: "top.json", params: ["limit": 50])
-        networkManager.sendRequest(withResource: resource, success: { (data) in
-            let jsonObject = try? JSONSerialization.jsonObject(with: data, options: [])
-            debugPrint(jsonObject)
+        network.sendRequest(withResource: resource, success: { (data) in
+            DispatchQueue.main.async {
+                success(data)
+            }
         }, error: { (errorString) in
-            debugPrint(errorString)
+            errorCallback(errorString)
         })
     }
 }
