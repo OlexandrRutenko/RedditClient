@@ -20,23 +20,23 @@ class ImageService {
             }
         } else {
             URLSession.shared.dataTask(with: url) { [weak self] (data, response, error) in
-                if let error = error {
-                    errorCallback(error.localizedDescription)
-                } else if let data = data {
-                    if let response = response, response.isValidResponse() {
-                        if let image = UIImage(data: data) {
-                            self?.imageCacheArray.setObject(image, forKey: urlString)
-                            DispatchQueue.main.async {
+                DispatchQueue.main.async {
+                    if let error = error {
+                            errorCallback(error.localizedDescription)
+                    } else if let data = data {
+                        if let response = response, response.isValidResponse() {
+                            if let image = UIImage(data: data) {
+                                self?.imageCacheArray.setObject(image, forKey: urlString)
                                 success(image)
+                            } else {
+                                errorCallback("Invalid data")
                             }
                         } else {
-                            errorCallback("Invalid data")
+                            errorCallback("Incorrect response")
                         }
                     } else {
-                        errorCallback("Incorrect response")
+                        errorCallback("No data")
                     }
-                } else {
-                    errorCallback("No data")
                 }
             }.resume()
         }

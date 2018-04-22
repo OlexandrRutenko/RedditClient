@@ -13,7 +13,7 @@
         <!--Top Posts-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="RedditClient" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="TopPostsViewController" customModule="RedditClient" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -38,8 +38,9 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h6U-Vw-Tn0">
                                                     <rect key="frame" x="0.0" y="23" width="375" height="200"/>
                                                     <subviews>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TLv-1E-s35">
+                                                        <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TLv-1E-s35">
                                                             <rect key="frame" x="0.0" y="8" width="375" height="192"/>
+                                                            <gestureRecognizers/>
                                                         </imageView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -113,7 +114,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Top Posts" id="frI-nz-WIk"/>
+                    <navigationItem key="navigationItem" title="Top Posts" id="frI-nz-WIk">
+                        <barButtonItem key="backBarButtonItem" title="Back" id="3Xh-Oj-uXl"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="wbU-LL-cKM" id="z1m-hF-iJ9"/>
                     </connections>
@@ -121,6 +124,49 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1076" y="91.304347826086968"/>
+        </scene>
+        <!--Image Preview-->
+        <scene sceneID="6lf-sy-LAY">
+            <objects>
+                <viewController storyboardIdentifier="ImagePreviewViewController" id="lm3-nn-qeS" customClass="ImagePreviewViewController" customModule="RedditClient" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="a9R-ly-dtQ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UqV-Dg-aJu">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                            </imageView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="7XM-Qc-Gq2">
+                                <rect key="frame" x="169" y="325" width="37" height="37"/>
+                                <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="7XM-Qc-Gq2" firstAttribute="centerY" secondItem="UqV-Dg-aJu" secondAttribute="centerY" id="60p-RF-iJH"/>
+                            <constraint firstItem="Hmi-yd-rn4" firstAttribute="bottom" secondItem="UqV-Dg-aJu" secondAttribute="bottom" id="PE3-6G-0wm"/>
+                            <constraint firstItem="UqV-Dg-aJu" firstAttribute="top" secondItem="Hmi-yd-rn4" secondAttribute="top" id="ULF-uX-Txp"/>
+                            <constraint firstItem="UqV-Dg-aJu" firstAttribute="leading" secondItem="Hmi-yd-rn4" secondAttribute="leading" id="UhB-fL-vW7"/>
+                            <constraint firstItem="Hmi-yd-rn4" firstAttribute="trailing" secondItem="UqV-Dg-aJu" secondAttribute="trailing" id="dWR-ER-EVr"/>
+                            <constraint firstItem="7XM-Qc-Gq2" firstAttribute="centerX" secondItem="UqV-Dg-aJu" secondAttribute="centerX" id="rAd-kk-DWq"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Hmi-yd-rn4"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Image Preview" id="eTr-sD-K1H">
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="8R8-As-34N">
+                            <connections>
+                                <action selector="saveImage:" destination="lm3-nn-qeS" id="fMx-fH-Vql"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="activityIndicatorView" destination="7XM-Qc-Gq2" id="RZp-g2-E7J"/>
+                        <outlet property="imageView" destination="UqV-Dg-aJu" id="jZx-Qh-D4J"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Fhp-4l-HTU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1985" y="91"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="tg9-e8-5vw">

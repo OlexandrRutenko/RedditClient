@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol PostTableViewCellDelegate: class {
+    func previewImage(on cell: PostTableViewCell)
+}
+
 class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var thumbnailImageView: UIImageView!
@@ -15,9 +19,13 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var commentsLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
-    
+    weak var delegate: PostTableViewCellDelegate?
     private let kImageViewHeightConstant: CGFloat = 200
     
+    override func awakeFromNib() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(previewImage))
+        thumbnailImageView.addGestureRecognizer(tapGestureRecognizer)
+    }
     override func prepareForReuse() {
         titleLabel.text = nil
         thumbnailImageView.image = nil
@@ -41,5 +49,9 @@ class PostTableViewCell: UITableViewCell {
         authorLabel.text = model.author
         commentsLabel.text = model.commentsCount
         dateLabel.text = model.creationDate
+    }
+    //MARK: - Actions
+    @objc private func previewImage() {
+        delegate?.previewImage(on: self)
     }
 }

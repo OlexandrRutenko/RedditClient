@@ -12,6 +12,7 @@ struct PostViewModel {
     let title: String?
     let author: String?
     let thumbnail: URL?
+    let imageURL: URL?
     let commentsCount: String?
     let creationDate: String?
 }
@@ -25,6 +26,7 @@ extension PostViewModel {
         } else {
             thumbnail = nil
         }
+        imageURL = post.imageURL
         commentsCount = "\(post.commentsCount ?? 0) comments"
         if let timeInterval = post.creationDate {
            creationDate = Date().timeLeft(from: Date(timeIntervalSince1970: timeInterval))
