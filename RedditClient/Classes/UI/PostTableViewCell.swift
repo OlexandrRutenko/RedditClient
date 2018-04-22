@@ -17,9 +17,6 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
     
     private let kImageViewHeightConstant: CGFloat = 200
-    static var identifier: String {
-        return String(describing: self)
-    }
     
     override func prepareForReuse() {
         titleLabel.text = nil

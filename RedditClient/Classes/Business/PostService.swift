@@ -17,14 +17,20 @@ class PostService {
     convenience init() {
         self.init(network: NetworkManager())
     }
-    func getPosts(success: @escaping (Page) -> Void, error errorCallback: @escaping (String) -> Void) {
-        let resource = Resource(endpoint: baseUrl, path: "top.json", params: ["limit": 50])
+    func getPosts(after: String? = nil, success: @escaping (Page) -> Void, error errorCallback: @escaping (String) -> Void) {
+        var params: ParamsType = ["limit": 50]
+        if let after = after {
+            params["after"] = after
+        }
+        let resource = Resource(endpoint: baseUrl, path: "top.json", params: params)
         network.sendRequest(withResource: resource, success: { (data) in
             DispatchQueue.main.async {
                 success(data)
             }
         }, error: { (errorString) in
-            errorCallback(errorString)
+            DispatchQueue.main.async {
+                errorCallback(errorString)
+            }
         })
     }
 }
