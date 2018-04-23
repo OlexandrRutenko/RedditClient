@@ -50,7 +50,7 @@ class PostTableViewCell: UITableViewCell {
         commentsLabel.text = model.commentsCount
         dateLabel.text = model.creationDate
     }
-    //MARK: - Actions
+    // MARK: - Actions
     @objc private func previewImage() {
         delegate?.previewImage(on: self)
     }

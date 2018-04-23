@@ -10,7 +10,8 @@ import UIKit
 
 class TopPostsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
-    //we can use dependecy injection for PostDataProtocol
+    //we can use dependency injection for PostDataProtocol
+    private let contentOffsetKey = "contentOffset"
     private let postDataManager = PostDataManager()
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
@@ -19,7 +20,6 @@ class TopPostsViewController: UIViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        postDataManager.loadPosts()
         postDataManager.onDidLoadPosts = { [weak self] in
             self?.tableView.reloadData()
         }
@@ -75,9 +75,23 @@ extension TopPostsViewController: PostTableViewCellDelegate {
             let currentPost = postDataManager.postCellViewModel(at: indexPath)
             let storyboard = UIStoryboard.init(name: "Main", bundle: .main)
             if let imagePreviewVC = storyboard.instantiateViewController(withIdentifier: "ImagePreviewViewController") as? ImagePreviewViewController {
-                imagePreviewVC.imageUrl = currentPost.imageURL
+                imagePreviewVC.imageURL = currentPost.imageURL
                 navigationController?.pushViewController(imagePreviewVC, animated: true)
             }
         }
+    }
+}
+
+extension TopPostsViewController {
+    override func encodeRestorableState(with coder: NSCoder) {
+        postDataManager.saveState()
+        let contentOffset = tableView.contentOffset
+        coder.encode(contentOffset, forKey: contentOffsetKey)
+        super.encodeRestorableState(with: coder)
+    }
+    override func decodeRestorableState(with coder: NSCoder) {
+        let contentOffset = coder.decodeCGPoint(forKey: contentOffsetKey)
+        tableView.setContentOffset(contentOffset, animated: false)
+        super.decodeRestorableState(with: coder)
     }
 }

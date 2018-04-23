@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct PostViewModel {
+struct PostViewModel: Codable {
     let title: String?
     let author: String?
     let thumbnail: URL?

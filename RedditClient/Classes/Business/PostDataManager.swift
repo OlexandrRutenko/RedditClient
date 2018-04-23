@@ -15,11 +15,17 @@ protocol PostDataProtocol {
     var onDidLoadPosts: (() -> ())? { get set }
     var onDidUpdateLoading: ((_ loading: Bool) -> ())? { get set }
     var numberOfCells: Int { get }
+    func saveState()
 }
 
-final class PostDataManager: PostDataProtocol {
+struct UserDefaultsKeys {
+    static let postsKey = "posts"
+    static let afterKey = "after"
+}
+
+final class PostDataManager: NSObject, PostDataProtocol {
     private let service = PostService()
-    private var currentPage: Page?
+    private var after: String?
     private var loading: Bool = false {
         didSet {
             onDidUpdateLoading?(loading)
@@ -30,10 +36,20 @@ final class PostDataManager: PostDataProtocol {
             onDidLoadPosts?()
         }
     }
+    override init() {
+        super.init()
+        if let data = UserDefaults.standard.value(forKey: UserDefaultsKeys.postsKey) as? Data,
+            let oldPosts = try? PropertyListDecoder().decode(Array<PostViewModel>.self, from: data) {
+            posts = oldPosts
+            after = UserDefaults.standard.object(forKey: UserDefaultsKeys.afterKey) as? String
+        } else {
+            loadPosts()
+        }
+    }
     var onDidLoadPosts: (() -> ())?
     var onDidUpdateLoading: ((_ loading: Bool) -> ())?
     func resetData() {
-        currentPage = nil
+        after = nil
         posts.removeAll()
     }
     func loadPosts() {
@@ -41,17 +57,17 @@ final class PostDataManager: PostDataProtocol {
             return
         }
         loading = true
-        service.getPosts(after: currentPage?.after, success: { [weak self] page in
+        service.getPosts(after: after, success: { [weak self] page in
             self?.loading = false
-            self?.currentPage = page
+            self?.after = page.after
             guard let currentPosts = page.posts else {
                 return
             }
             let postViewModels = currentPosts.map({ PostViewModel($0) })
             self?.posts += postViewModels
-        }, error: { [weak self] erroString in
+        }, error: { [weak self] errorString in
             self?.loading = false
-            debugPrint(erroString)
+            debugPrint(errorString)
         })
     }
     var numberOfCells: Int {
@@ -59,6 +75,11 @@ final class PostDataManager: PostDataProtocol {
     }
     func postCellViewModel(at indexPath: IndexPath) -> PostViewModel {
         return posts[indexPath.row]
+    }
+    // restoration
+    func saveState() {
+        UserDefaults.standard.set(after, forKey: UserDefaultsKeys.afterKey)
+        UserDefaults.standard.set(try? PropertyListEncoder().encode(posts), forKey: UserDefaultsKeys.postsKey)
     }
 }
 
